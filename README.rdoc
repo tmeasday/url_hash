@@ -5,8 +5,8 @@ Hashes may or may not be encrypted, depending on usage.
 
 Sample uses (inside Rails projects):
 1. Shortening urls for commonly used models. Add something like this to the bottom of your routes.rb:
-  
-  match ':hash', /^.{8}$/, :to => 'model#' + UrlHash.from_hash(hash)
+  match ':hash', :constraints => {:hash => /.{8}/},
+    :to => redirect { |params| "/models/#{UrlHash.from_hash(params[:hash])}" }
   
 And something like this to your model
   class Model ...
@@ -16,8 +16,9 @@ And something like this to your model
     end
   end
   
-You probably don't need to encrypt in this case, unless your ids are private somehow.
-It'd probably be better to use a metal to do this.
+Notes:
+* You probably don't need to encrypt in this case, unless your ids are private somehow.
+* It'd probably be better to use a metal to do this, rather than the route, as we don't need any environmental stuff, take this code as pointer in the right direction.
 
 2. A Short URL service. We store a map from hashes to urls in the database. Something like:
   class ShortUrl < ActiveRecord::Base
@@ -36,7 +37,8 @@ It'd probably be better to use a metal to do this.
   end
 
 And something like (in routes.rb)
-  match ':hash', /^.{8}$/, :to => ShortUrl.find_by_hash(hash).url
+  match ':hash', :constraints => {:hash => /.{8}/},
+    :to => redirect { |params| ShortUrl.find_by_hash(params[:hash]).url }
 
 Notes:
 * You will want to use find_or_create_by_url to create the short_urls and, you'll want an index on url.

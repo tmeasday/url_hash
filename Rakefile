@@ -15,8 +15,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "url_hash"
   gem.homepage = "http://github.com/tmeasday/url_hash"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Create url-embeddable hashes from integers}
+  gem.description = %Q{Create url-embeddable hashes from integers, for use in short-url services or simple to shorten resource accesses.}
   gem.email = "tom@thesnail.org"
   gem.authors = ["Tom Coleman"]
   # Include your dependencies below. Runtime dependencies are required when using your gem,
