@@ -1,6 +1,46 @@
 = url_hash
 
-Description goes here.
+A simple little library for converting integers to X-character hashes, suitable for uses in urls.
+Hashes may or may not be encrypted, depending on usage.
+
+Sample uses (inside Rails projects):
+1. Shortening urls for commonly used models. Add something like this to the bottom of your routes.rb:
+  
+  match ':hash', /^.{8}$/, :to => 'model#' + UrlHash.from_hash(hash)
+  
+And something like this to your model
+  class Model ...
+    def hash
+      save! if new_record?
+      UrlHash.to_hash(self.id)
+    end
+  end
+  
+You probably don't need to encrypt in this case, unless your ids are private somehow.
+It'd probably be better to use a metal to do this.
+
+2. A Short URL service. We store a map from hashes to urls in the database. Something like:
+  class ShortUrl < ActiveRecord::Base
+    validates_presence_of :url
+    validates_uniqueness_of :url
+  
+    def self.find_by_hash(hash, opts = {})
+      # use conditions rather than a find so that we don't throw an exception
+      find :first, {:conditions => {:id => UrlHash.from_hash(hash)}}.merge(opts)
+    end
+  
+    def hash
+      save! if new_record?
+      UrlHash.to_hash(self.id)
+    end
+  end
+
+And something like (in routes.rb)
+  match ':hash', /^.{8}$/, :to => ShortUrl.find_by_hash(hash).url
+
+Notes:
+* You will want to use find_or_create_by_url to create the short_urls and, you'll want an index on url.
+* If you have any kind of security based on URLs being difficult to guess, you'll want to use encryption
 
 == Contributing to url_hash
  
