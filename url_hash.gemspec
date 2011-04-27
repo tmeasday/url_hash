@@ -26,7 +26,8 @@ Gem::Specification.new do |s|
     "VERSION",
     "lib/url_hash.rb",
     "test/helper.rb",
-    "test/test_url_hash.rb"
+    "test/test_url_hash.rb",
+    "url_hash.gemspec"
   ]
   s.homepage = %q{http://github.com/tmeasday/url_hash}
   s.licenses = ["MIT"]
